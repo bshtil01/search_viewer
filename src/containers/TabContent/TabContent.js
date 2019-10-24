@@ -12,11 +12,13 @@ const TabContent = props => {
                 <Grid item xs={9}>
                     <Grid container spacing={3}>
                         {/* TODO on select to enlarge */}
+                        <Grid key='video-colum' item xs={12}>Videos</Grid>
                         <ResultList items={videos} type={'video'} />
                     </Grid>
                 </Grid>
                 <Grid item xs={3}>
                     <Grid container spacing={3}>
+                        <Grid key='image-colum' item xs={12}>images</Grid>
                         <ResultList items={images} type={'images'} />
                     </Grid>
                 </Grid>

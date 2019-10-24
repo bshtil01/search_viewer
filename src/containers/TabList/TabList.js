@@ -34,7 +34,7 @@ class TabList extends React.Component{
         };
     }
 
-    createBlankTab = index => {
+    createBlankTab = (index) => {
         return {
             index : index,
             term : '',
@@ -56,11 +56,14 @@ class TabList extends React.Component{
 
   //TODO new index should be last index + 1 in the array
     handleNewTab = event => {
+        const { tabs } = this.state;
+        const lastIndex =  tabs[tabs.length-1].index + 1 ;
+
         this.setState(
             state => ({
             tabs: [
                 ...state.tabs,
-                this.createBlankTab(state.tabs.length)
+                this.createBlankTab(lastIndex)
             ]
             })
         );
@@ -96,6 +99,7 @@ class TabList extends React.Component{
         const { classes } = this.props;
         const { tabs, currentTab } = this.state;
 
+        console.log(tabs)
         return (
             <div className={classes.root}>
                 <Grid container spacing={3}>
@@ -110,8 +114,21 @@ class TabList extends React.Component{
                             className={classes.tabs}
                         > 
                             {/* render the tab list  */}
-                            {/* TODO change label to search "term..." */}
-                            {this.state.tabs.map(tab => <Tab key={tab.index} label = {`Tab  ${tab.index + 1}` } {...this.a11yProps(tab.index) } />)}
+                            {this.state.tabs.map(
+                                tab => {
+                                    let label = `Tab  ${ tab.index + 1}`;
+                                    if (tab.term !== ''){
+                                        label = tab.term.length > 7 ? ` ${tab.term.slice(0,7)}...` : tab.term.slice(0,10)
+                                    }
+                                    return(
+                                        <Tab 
+                                            key={tab.index} 
+                                            label = {label} 
+                                            {...this.a11yProps(tab.index)} 
+                                        />
+                                    )
+                                }
+                            )}
                             {/* render element for adding new tab  */}
                             <Tab key={this.state.tabs.length} icon={<ControlPointIcon />} {...this.a11yProps(this.state.tabs.length)} onClick={this.handleNewTab}/>;
                         </Tabs>
