@@ -22,115 +22,114 @@ const styles = theme => ({
       }
 });
 
-// TODO change tabulation 
 class TabList extends React.Component{
-  constructor(props) {
-    super(props);
+    constructor(props) {
+        super(props);
 
-    this.state = { 
-        currentTab : 0,
-        tabs: [
-            this.createBlankTab(0)       
-        ]
-    };
-  }
-
-  createBlankTab = index => {
-    return {
-      index : index,
-      term : '',
-      images: [],
-      videos: [],
+        this.state = { 
+            currentTab : 0,
+            tabs: [
+                this.createBlankTab(0)       
+            ]
+        };
     }
-  }
 
-  a11yProps(index) {
-    return {
-      id: `vertical-tab-${index}`,
-      'aria-controls': `vertical-tabpanel-${index}`,
+    createBlankTab = index => {
+        return {
+            index : index,
+            term : '',
+            images: [],
+            videos: [],
+        }
+    }
+
+    a11yProps(index) {
+        return {
+            id: `vertical-tab-${index}`,
+            'aria-controls': `vertical-tabpanel-${index}`,
+        };
+    }
+
+    handleTabChange = (event, newSelectedTab ) => {
+        this.setState({currentTab : newSelectedTab});
     };
-  }
-
-  handleTabChange = (event, newSelectedTab ) => {
-    this.setState({currentTab : newSelectedTab});
-  };
 
   //TODO new index should be last index + 1 in the array
-  handleNewTab = event => {
-    this.setState(
-      state => ({
-        tabs: [
-          ...state.tabs,
-          this.createBlankTab(state.tabs.length)
-        ]
-      })
-    );
-  }
+    handleNewTab = event => {
+        this.setState(
+            state => ({
+            tabs: [
+                ...state.tabs,
+                this.createBlankTab(state.tabs.length)
+            ]
+            })
+        );
+    }
 
-  handleRequest = async term => {
-    const responseYoutube = await youtube.get('/search', {
-        params: {
-            q: term
-        }
-    });
+    handleRequest = async term => {
+        const responseYoutube = await youtube.get('/search', {
+            params: {
+                q: term
+            }
+        });
 
-    const responseGCS = await googleSearch.get( '',{
-        params: {
-            q: term
-        }
-    })
-    const index = this.state.currentTab;
-    const changedItem = this.state.tabs.findIndex(tab => tab.index === index);
-    const tabs = this.state.tabs;
-    tabs[changedItem] = {
-      ...tabs[changedItem],
-      index : index,
-      term : term,
-      videos: responseYoutube.data.items,
-      images: responseGCS.data.items,
-    };
-    this.setState({tabs});
-  }
+        const responseGCS = await googleSearch.get( '',{
+            params: {
+                q: term
+            }
+        })
+        const index = this.state.currentTab;
+        const changedItem = this.state.tabs.findIndex(tab => tab.index === index);
+        const tabs = this.state.tabs;
+        tabs[changedItem] = {
+            ...tabs[changedItem],
+            index : index,
+            term : term,
+            videos: responseYoutube.data.items,
+            images: responseGCS.data.items,
+        };
+        this.setState({tabs});
+    }
 
 
-  render(){
-    const { classes } = this.props;
-    const { tabs, currentTab } = this.state;
+    render(){
+        const { classes } = this.props;
+        const { tabs, currentTab } = this.state;
 
-    return (
-      <div className={classes.root}>
-      <Grid container spacing={3}>
-        <Grid item xs={2}>
-          {/* tab component  */}
-          <Tabs
-            orientation="vertical"
-            variant="scrollable"
-            value={currentTab}
-            onChange={this.handleTabChange}
-            aria-label="Vertical tabs example"
-            className={classes.tabs}
-          > 
-            {/* render the tab list  */}
-            {this.state.tabs.map(tab => <Tab key={tab.index} label = 'new' {...this.a11yProps(tab.index) } />)}
-            {/* render element for adding new tab  */}
-            <Tab key={this.state.tabs.length} icon={<ControlPointIcon />} {...this.a11yProps(this.state.tabs.length)} onClick={this.handleNewTab}/>;
-          </Tabs>
-        </Grid>
-        
-        <Grid item xs={10}>
-          {/* render tab panels  */}
-          {this.state.tabs.map(tab => {
-            return(
-              <TabPanel key={tab.index} value={currentTab} index={tab.index}>
-                <TabContent key={tab.index} onSearch={this.handleRequest} data={tabs.find(data => data.index === tab.index)}/>
-              </TabPanel>
-            )
-          })}
-        </Grid>
-      </Grid>
-      </div>
-    );
-  }
+        return (
+            <div className={classes.root}>
+                <Grid container spacing={3}>
+                    <Grid item xs={2}>
+                        {/* tab component  */}
+                        <Tabs
+                            orientation="vertical"
+                            variant="scrollable"
+                            value={currentTab}
+                            onChange={this.handleTabChange}
+                            aria-label="Vertical tabs example"
+                            className={classes.tabs}
+                        > 
+                            {/* render the tab list  */}
+                            {/* TODO change label to search "term..." */}
+                            {this.state.tabs.map(tab => <Tab key={tab.index} label = {`Tab  ${tab.index + 1}` } {...this.a11yProps(tab.index) } />)}
+                            {/* render element for adding new tab  */}
+                            <Tab key={this.state.tabs.length} icon={<ControlPointIcon />} {...this.a11yProps(this.state.tabs.length)} onClick={this.handleNewTab}/>;
+                        </Tabs>
+                    </Grid>
+                    <Grid item xs={10}>
+                    {/* render tab panels  */}
+                    {this.state.tabs.map(tab => {
+                        return(
+                        <TabPanel key={tab.index} value={currentTab} index={tab.index}>
+                            <TabContent key={tab.index} onSearch={this.handleRequest} data={tabs.find(data => data.index === tab.index)}/>
+                        </TabPanel>
+                        )
+                    })}
+                    </Grid>
+                </Grid>
+            </div>
+        );
+    }
 }
 
 export default withStyles(styles)(TabList);

@@ -20,15 +20,6 @@ const ImageItem = ({ item, onSelect}) => {
     const classes = useStyles();
 
     return (
-        // <div onClick={() => onSelect(item)} className="video-item item">
-        //     <img alt={item.title} className="ui image" src={item.image.thumbnailLink} />
-        //     <div className="content">
-        //         <div className="header">
-        //             {item.title}
-        //         </div>
-        //     </div>
-        // </div>
-
         <Card className={classes.card} onClick={() => onSelect(item)}>
             <CardActionArea>
                 <CardMedia
@@ -38,12 +29,9 @@ const ImageItem = ({ item, onSelect}) => {
                 title={title}
                 />
                 <CardContent>
-                <Typography gutterBottom variant="h6" component="h3">
-                    {title.length < 25 ? title : `${title.slice(0,25)}...`}
-                </Typography>
-                {/* <Typography variant="body2" color="textSecondary" component="p">
-                    {description.length < 50 ? title : `${description.slice(0,50)}...`}
-                </Typography> */}
+                    <Typography gutterBottom variant="h6" component="h3">
+                        {title.length < 25 ? title : `${title.slice(0,25)}...`}
+                    </Typography>
                 </CardContent>
             </CardActionArea>
         </Card>
