@@ -19,8 +19,12 @@ const ImageItem = ({ item, onSelect}) => {
     const { title, image } = item;
     const classes = useStyles();
 
+    const handleClickOpen = (item) => {
+        onSelect(item,'image');
+      };
+
     return (
-        <Card className={classes.card} onClick={() => onSelect(item)}>
+        <Card className={classes.card} onClick={() => handleClickOpen(item)}>
             <CardActionArea>
                 <CardMedia
                 component="img"
@@ -29,7 +33,7 @@ const ImageItem = ({ item, onSelect}) => {
                 title={title}
                 />
                 <CardContent>
-                    <Typography gutterBottom variant="h6" component="h3">
+                    <Typography gutterBottom variant="subtitle2" component="h3">
                         {title.length < 25 ? title : `${title.slice(0,25)}...`}
                     </Typography>
                 </CardContent>

@@ -7,8 +7,9 @@ import { withStyles } from '@material-ui/styles';
 
 import TabPanel from '../../components/TabPanel/TabPanel';
 import TabContent from '../TabContent/TabContent';
-import youtube from './../../assets/api/youtube';
-import googleSearch from './../../assets/api/googleSearch';
+// import youtube from './../../assets/api/youtube';
+// import googleSearch from './../../assets/api/googleSearch';
+import { videoResponse, imageResponse } from './../../assets/api/fakeResponce';
 
 const styles = theme => ({
   root: {
@@ -54,10 +55,9 @@ class TabList extends React.Component{
         this.setState({currentTab : newSelectedTab});
     };
 
-  //TODO new index should be last index + 1 in the array
     handleNewTab = event => {
         const { tabs } = this.state;
-        const lastIndex =  tabs[tabs.length-1].index + 1 ;
+        const lastIndex =  tabs !== 'undefined' && tabs.length !== 0? tabs[tabs.length-1].index + 1 : 0 ;
 
         this.setState(
             state => ({
@@ -70,36 +70,55 @@ class TabList extends React.Component{
     }
 
     handleRequest = async term => {
-        const responseYoutube = await youtube.get('/search', {
-            params: {
-                q: term
-            }
-        });
+        // const responseYoutube = await youtube.get('/search', {
+        //     params: {
+        //         q: term
+        //     }
+        // });
 
-        const responseGCS = await googleSearch.get( '',{
-            params: {
-                q: term
-            }
-        })
+        // const responseGCS = await googleSearch.get( '',{
+        //     params: {
+        //         q: term
+        //     }
+        // })
+        const responseYoutube = videoResponse;
+        const responseGCS = imageResponse;
+
         const index = this.state.currentTab;
         const changedItem = this.state.tabs.findIndex(tab => tab.index === index);
+        // const changedItem = this.state.tabs.findIndex(tab => tab.index === this.state.tabs.findIndex(data => data.index === tab.index));
         const tabs = this.state.tabs;
+        console.log(index,changedItem)
         tabs[changedItem] = {
             ...tabs[changedItem],
             index : index,
             term : term,
-            videos: responseYoutube.data.items,
-            images: responseGCS.data.items,
+            //TODO add data after changing to real response
+            videos: responseYoutube.items,
+            images: responseGCS.items,
         };
         this.setState({tabs});
+    }
+    handleClose = () => {
+        console.log(1)
+        let stateArr = [...this.state.tabs];
+        stateArr.splice(this.state.tabs.findIndex(tab => tab.index === this.state.tabs[this.state.currentTab].index),1);
+        this.setState(state => ({
+            tabs: stateArr,
+            currentTab: state.currentTab-1
+        }));
+        if (this.state.tabs.length <= 1  ){
+            this.setState({
+                currentTab: 0
+            })
+        };
     }
 
 
     render(){
         const { classes } = this.props;
         const { tabs, currentTab } = this.state;
-
-        console.log(tabs)
+        
         return (
             <div className={classes.root}>
                 <Grid container spacing={3}>
@@ -130,15 +149,25 @@ class TabList extends React.Component{
                                 }
                             )}
                             {/* render element for adding new tab  */}
-                            <Tab key={this.state.tabs.length} icon={<ControlPointIcon />} {...this.a11yProps(this.state.tabs.length)} onClick={this.handleNewTab}/>;
+                            <Tab 
+                                key={this.state.tabs.length} 
+                                icon={<ControlPointIcon />} 
+                                {...this.a11yProps(this.state.tabs.length)} 
+                                onClick={this.handleNewTab}
+                            />;
                         </Tabs>
                     </Grid>
                     <Grid item xs={10}>
                     {/* render tab panels  */}
                     {this.state.tabs.map(tab => {
-                        return(
-                        <TabPanel key={tab.index} value={currentTab} index={tab.index}>
-                            <TabContent key={tab.index} onSearch={this.handleRequest} data={tabs.find(data => data.index === tab.index)}/>
+                        return( 
+                        <TabPanel key={tab.index} value={currentTab} index={tabs.findIndex(data => data.index === tab.index)}>
+                            <TabContent 
+                                key={tab.index} 
+                                data={tabs.find(data => data.index === tab.index)}
+                                onFormSubmit={this.handleRequest} 
+                                onClose={this.handleClose} 
+                            />
                         </TabPanel>
                         )
                     })}

@@ -5,6 +5,10 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+// import CustomizedDialogs from './../../components/Modal/Modal';
+// import Dialog from '@material-ui/core/Dialog';
+// import DialogContent from '@material-ui/core/DialogContent';
+// import DialogTitle from '@material-ui/core/DialogTitle';
 
 const useStyles = makeStyles({
     card: {
@@ -15,12 +19,17 @@ const useStyles = makeStyles({
     },
   });;
 
-const VideoItem = ({ item, onVideoSelect}) => {
+const VideoItem = ({ item, onSelect }) => {
     const { title, description, thumbnails } = item.snippet;
     const classes = useStyles();
 
+    const handleClickOpen = (item) => {
+      onSelect(item,'video');
+    };
+
     return (
-        <Card className={classes.card} onClick={() => onVideoSelect(item)}>
+        <>
+        <Card className={classes.card} onClick={() => { handleClickOpen(item) } } >
             <CardActionArea>
                 <CardMedia
                     component="img"
@@ -29,7 +38,7 @@ const VideoItem = ({ item, onVideoSelect}) => {
                     title={title}
                 />
                 <CardContent>
-                    <Typography gutterBottom variant="h6" component="h3">
+                    <Typography gutterBottom variant="subtitle2" component="h3">
                         {title.length < 50 ? title : `${title.slice(0,50)}...`}
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
@@ -38,6 +47,7 @@ const VideoItem = ({ item, onVideoSelect}) => {
                 </CardContent>
             </CardActionArea>
         </Card>
+        </>
     )
 };
 
