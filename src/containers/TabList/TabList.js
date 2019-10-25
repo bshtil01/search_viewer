@@ -7,10 +7,10 @@ import { withStyles } from '@material-ui/styles';
 
 import TabPanel from '../../components/TabPanel/TabPanel';
 import TabContent from '../TabContent/TabContent';
-// import youtube from './../../assets/api/youtube';
-// import googleSearch from './../../assets/api/googleSearch';
+import youtube from './../../assets/api/youtube';
+import googleSearch from './../../assets/api/googleSearch';
 // fake responce import - after reaching api limit
-import { videoResponse, imageResponse } from './../../assets/api/fakeResponse';
+// import { videoResponse, imageResponse } from './../../assets/api/fakeResponse';
 
 const styles = theme => ({
   root: {
@@ -75,20 +75,20 @@ class TabList extends React.Component{
     }
 
     handleRequest = async term => {
-        // const responseYoutube = await youtube.get('/search', {
-        //     params: {
-        //         q: term
-        //     }
-        // });
+        const responseYoutube = await youtube.get('/search', {
+            params: {
+                q: term
+            }
+        });
 
-        // const responseGCS = await googleSearch.get( '',{
-        //     params: {
-        //         q: term
-        //     }
-        // })
+        const responseGCS = await googleSearch.get( '',{
+            params: {
+                q: term
+            }
+        })
         //fake Response - after reaching api limit
-        const responseYoutube = videoResponse;
-        const responseGCS = imageResponse;
+        // const responseYoutube = videoResponse;
+        // const responseGCS = imageResponse;
         const index = this.state.currentTab;
         const changedItem = this.state.tabs.findIndex(tab => tab.index === this.state.tabs[index].index);
         const tabs = this.state.tabs;
@@ -96,11 +96,11 @@ class TabList extends React.Component{
             ...tabs[changedItem],
             index : this.state.tabs[index].index,
             term : term,
-            // videos: responseYoutube.data.items,
-            // images: responseGCS.data.items,
+            videos: responseYoutube.data.items,
+            images: responseGCS.data.items,
             // faka response setting state - after reaching api limit
-            videos: responseYoutube.items,
-            images: responseGCS.items,
+            // videos: responseYoutube.items,
+            // images: responseGCS.items,
         };
         this.setState({tabs});
     }
