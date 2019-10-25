@@ -3,7 +3,6 @@ import Container from '@material-ui/core/Container';
 
 import NavBar from './../../components/NavBar/NavBar';
 import TabList from './../TabList/TabList';
-// import TempCont from './../TempCont/TempCont';
 
 class App extends React.Component  {
     state = { videos: [], selectedVideo: null };
@@ -12,8 +11,7 @@ class App extends React.Component  {
         return (
             <div>
                 <NavBar />
-                <Container >
-                    {/* <TempCont /> */}
+                <Container height="100vh">
                     <TabList />
                 </Container>
             </div>

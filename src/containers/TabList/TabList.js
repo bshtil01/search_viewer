@@ -9,18 +9,23 @@ import TabPanel from '../../components/TabPanel/TabPanel';
 import TabContent from '../TabContent/TabContent';
 // import youtube from './../../assets/api/youtube';
 // import googleSearch from './../../assets/api/googleSearch';
-import { videoResponse, imageResponse } from './../../assets/api/fakeResponce';
+// fake responce import - after reaching api limit
+import { videoResponse, imageResponse } from './../../assets/api/fakeResponse';
 
 const styles = theme => ({
   root: {
-        flexGrow: 1,
-        backgroundColor: 'rgb(210, 226, 253)',
-        display: 'flex',
-        height: '100%',
-      },
-      tabs: {
-        borderRight: `1px solid rgb(201, 201, 201)`,
-      }
+            flexGrow: 1,
+            backgroundColor: 'rgb(210, 226, 253)',
+            display: 'flex',
+            margin: '0px'
+        },
+        tabs: {
+            borderRight: `1px solid rgb(201, 201, 201)`,
+        },
+        container: {
+            height: '90vh',
+            margin: '0px'
+        }
 });
 
 class TabList extends React.Component{
@@ -81,26 +86,26 @@ class TabList extends React.Component{
         //         q: term
         //     }
         // })
+        //fake Response - after reaching api limit
         const responseYoutube = videoResponse;
         const responseGCS = imageResponse;
-
         const index = this.state.currentTab;
-        const changedItem = this.state.tabs.findIndex(tab => tab.index === index);
-        // const changedItem = this.state.tabs.findIndex(tab => tab.index === this.state.tabs.findIndex(data => data.index === tab.index));
+        const changedItem = this.state.tabs.findIndex(tab => tab.index === this.state.tabs[index].index);
         const tabs = this.state.tabs;
-        console.log(index,changedItem)
         tabs[changedItem] = {
             ...tabs[changedItem],
-            index : index,
+            index : this.state.tabs[index].index,
             term : term,
-            //TODO add data after changing to real response
+            // videos: responseYoutube.data.items,
+            // images: responseGCS.data.items,
+            // faka response setting state - after reaching api limit
             videos: responseYoutube.items,
             images: responseGCS.items,
         };
         this.setState({tabs});
     }
+
     handleClose = () => {
-        console.log(1)
         let stateArr = [...this.state.tabs];
         stateArr.splice(this.state.tabs.findIndex(tab => tab.index === this.state.tabs[this.state.currentTab].index),1);
         this.setState(state => ({
@@ -114,14 +119,13 @@ class TabList extends React.Component{
         };
     }
 
-
     render(){
         const { classes } = this.props;
         const { tabs, currentTab } = this.state;
         
         return (
             <div className={classes.root}>
-                <Grid container spacing={3}>
+                <Grid container spacing={3} className={classes.container}>
                     <Grid item xs={2}>
                         {/* tab component  */}
                         <Tabs
@@ -163,10 +167,11 @@ class TabList extends React.Component{
                         return( 
                         <TabPanel key={tab.index} value={currentTab} index={tabs.findIndex(data => data.index === tab.index)}>
                             <TabContent 
-                                key={tab.index} 
-                                data={tabs.find(data => data.index === tab.index)}
-                                onFormSubmit={this.handleRequest} 
-                                onClose={this.handleClose} 
+                                key = {tab.index} 
+                                data = {tabs.find(data => data.index === tab.index)}
+                                onFormSubmit = {this.handleRequest} 
+                                onClose = {this.handleClose} 
+                                onSearch = {this.handleSearch}
                             />
                         </TabPanel>
                         )

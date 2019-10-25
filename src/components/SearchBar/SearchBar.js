@@ -1,7 +1,21 @@
 import React from 'react';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import SearchIcon from '@material-ui/icons/Search';
 import TextField from '@material-ui/core/TextField';
+import { withStyles } from '@material-ui/styles';
 
-import './SearchBar.scss';
+const styles = theme => ({
+    button: {
+        margin: "auto",
+        justifySelf: 'center'
+    },
+    grid: {
+        justifyContent: 'center',
+        display: 'flex',
+        alignItems: 'center'
+    },
+  });
 
 class SearchBar extends React.Component {
     constructor(props){
@@ -15,14 +29,17 @@ class SearchBar extends React.Component {
     }
     onFormSubmit = event => {
         event.preventDefault();
-        this.props.onFormSubmit(this.state.term);
+        if(this.state.term){
+            this.props.onFormSubmit(this.state.term);
+        }
     }
 
     render() {
+        const { classes } = this.props;
         return (
-            <div className="search-bar ui segment">
-                <form onSubmit={this.onFormSubmit} className="ui form">
-                    <div className="field">
+            <form onSubmit={this.onFormSubmit} className="ui form">
+                <Grid container>
+                    <Grid item xs={9} className={classes.grid}>
                         <TextField
                             id="outlined-full-width"
                             placeholder="Type here"
@@ -35,11 +52,23 @@ class SearchBar extends React.Component {
                             shrink: true,
                             }}
                         />
-                    </div>
-                </form>
-            </div>
-        )
+                    </Grid>
+                    <Grid item xs={3} className={classes.grid}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            className={classes.button}
+                            startIcon={<SearchIcon />}
+                            onClick={this.onFormSubmit}
+                        >
+                            Search
+                        </Button>
+
+                    </Grid>
+                </Grid>
+            </form>
+        )   
     }
 }
 
-export default SearchBar;
+export default withStyles(styles)(SearchBar);

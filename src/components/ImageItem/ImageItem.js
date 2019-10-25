@@ -1,19 +1,19 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
     card: {
-      maxWidth: 300,
+        maxWidth: 300,
     },
     media: {
-      height: 100,
+        height: 100,
     },
-  });;
+});;
 
 const ImageItem = ({ item, onSelect}) => {
     const { title, image } = item;
@@ -21,7 +21,7 @@ const ImageItem = ({ item, onSelect}) => {
 
     const handleClickOpen = (item) => {
         onSelect(item,'image');
-      };
+    };
 
     return (
         <Card className={classes.card} onClick={() => handleClickOpen(item)}>

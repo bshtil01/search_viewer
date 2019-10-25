@@ -8,7 +8,8 @@ export default axios.create({
     params: {
         key: KEY,
         cx: ENGINE_ID,
-        searchType: "image"
+        searchType: "image",
+        num: 6
     }
 });
 
